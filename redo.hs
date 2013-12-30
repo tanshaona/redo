@@ -1,6 +1,13 @@
 -- file: redo.hs
-import System.Process
+import System.Environment (getArgs)
+import System.Process (createProcess, waitForProcess, shell)
+main :: IO ()
 main = do
-	_ <- createProcess $ shell "sh redo.do"	
-	return ()
+    args <- getArgs
+    mapM_ redo args
 
+redo :: String -> IO ()
+redo target = do
+    (_,_,_,ph) <- createProcess $ shell $ "sh " ++ target ++ ".do"
+    _ <- waitForProcess ph
+    return ()
